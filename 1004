@@ -1,0 +1,35 @@
+// 1004.cpp
+//poor thethefus
+ 
+#include <iostream>
+using namespace std;
+int main()
+{
+    long int M, T, nf, f,tmp,i;
+    char r;
+    cin >> M >> T >> nf >> f >> tmp;
+    nf += tmp;
+    f *= 2;
+    tmp = 0;
+    for (i = 0; i < T; i++)
+    {
+        cin >> r;
+        if (r == 'f')
+        {
+            if ((tmp + f) > M) break;
+            tmp += f;
+        }
+        if (r == 'u' || r == 'd')
+        {
+            if ((tmp + nf) > M) break;
+            tmp += nf;
+        }
+    }
+    for (long int j = i+1; j < T; j++)
+    {
+        cin >> r;
+    }
+    cout << i;
+    return 0;
+ 
+}
