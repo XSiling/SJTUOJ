@@ -1,0 +1,33 @@
+// 1029.cpp 
+//整理书架问题
+#pragma warning (disable:4996)
+#include <iostream>
+#include <string>
+#include <cstring>
+using namespace std;
+int main()
+{
+	int n,goal=0,from,to;
+	char** s;
+	cin >> n;
+	s = new char* [n];
+	cin.ignore();
+	for (int i = 0; i < n; i++)
+	{
+		s[i] = new char[20000];
+		cin.getline(s[i],20000);
+	}
+	for (int i = 0; i < n - 1; i++)
+	{
+		cin >> from >> to;
+		if ((from - 1) == goal) { goal = to - 1; }
+		strcat(s[to - 1], " ");
+		strcat(s[to - 1], s[from - 1]);
+	}
+	cout << s[goal];
+	for (int i = 0; i < n; i++)
+	{
+		delete s[i];
+	}
+	delete s;
+}
