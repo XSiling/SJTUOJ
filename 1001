@@ -1,0 +1,18 @@
+#include <iostream>
+using namespace std;
+int main()
+{
+	int broheight, chairheight, applenum,ablenum=0;
+	cin >> broheight >> chairheight>>applenum;
+	int* apple = new int[applenum];
+	for (int i = 0; i < applenum; i++)
+	{
+		cin >> apple[i];
+	}
+	for (int i = 0; i < applenum; i++)
+	{
+		(broheight + chairheight) >= apple[i] ? ablenum++ :ablenum+=0;
+	}
+	cout << ablenum;
+	delete[]apple;
+}
