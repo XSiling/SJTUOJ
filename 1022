@@ -1,0 +1,31 @@
+// 1022.cpp 
+//Fibs with 2010
+ 
+#include <iostream>
+using namespace std;
+#define divider 2010
+int main()
+{
+	int fibs[3] = { 1,1,2 };
+	int place = 2,p1=0,p2=1;
+	long n;
+	cin >> n;
+	if (n % 2040 != 0) { n %= 2040; }
+	else
+		n = 2040;
+	for (int i = 0; i < n - 2; i++)
+	{
+		fibs[place] = fibs[p1] + fibs[p2];
+		fibs[place] %= divider;
+		place++;
+		place %= 3;
+		p1++;
+		p1 %= 3;
+		p2++;
+		p2 %= 3;
+	}
+	place += 2;
+	place %= 3;
+	fibs[place] %= 2010;
+	cout << fibs[place];
+}
