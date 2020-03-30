@@ -1,0 +1,95 @@
+// 1007.cpp 
+//bro2 and his salary
+ 
+#include <iostream>
+#include <cstring>
+using namespace std;
+int develop(char*, char*);
+int main()
+{
+	char n1[201], n2[201], f1[3], f2[3];
+	int out, l1, l2;
+	cin.getline(n1, 200, '.');
+	cin.getline(f1, 3);
+	cin.getline(n2, 200, '.');
+	cin.getline(f2, 3);
+	l1 = strlen(n1);
+	l2 = strlen(n2);
+	//处理小数部分进位
+ 
+	out=develop(f1, f2);
+	n2[l2 - 1] += out;
+	out = develop(n1, n2);
+	if (out != 0)
+	{
+		cout << out;
+	}
+	if (l1 >= l2)
+	{
+		cout << n1;
+	}
+	else
+	{
+		cout << n2;
+	}
+	cout << '.' << f1;
+	return 0;
+}
+ 
+int develop(char* s1, char* s2)
+{
+	int out=0;
+	char* k[2];
+	k[0] = strlen(s1) >= strlen(s2) ? s1 : s2;
+	k[1] = strlen(s1) < strlen(s2) ? s1 : s2;
+	int l0 = strlen(k[0]);
+	int l1 = strlen(k[1]);
+	for (int i = 0; i < l1 - 1; i++)
+	{
+		k[0][l0 - i - 1] += k[1][l1 - i - 1]-'0';
+		if (k[0][l0 - i - 1] > '9')
+		{
+			out = (k[0][l0 - i - 1]-'0' )/ 10;
+			k[0][l0 - i - 1] -= out * 10;
+			k[0][l0 - i - 2] += out;
+		}
+	}
+	out = 0;
+	if (l1 == l0)
+	{
+		k[0][0] += k[1][0] - '0';
+		if (k[0][0] > '9')
+		{
+			out = (k[0][0]-'0') / 10;
+			k[0][0] -= out * 10;
+			return out;
+		}
+		return out;
+	}
+	else
+	{
+		k[0][l0 - l1] += k[1][0] - '0';
+		for (int i = 0; i <l0-l1; i++ )
+		{
+			out = 0;
+			if (k[0][l0 - l1 - i] > '9')
+			{
+				out =( k[0][l0 - l1 - i]-'0' )/ 10;
+				k[0][l0 - l1 - i] -= out * 10;
+				k[0][l0 - l1 - i - 1] += out;
+			}
+			else { return out; }
+		}
+		if (k[0][0] > '9')
+		{
+			out =( k[0][0] - '0') / 10;
+			k[0][0] -= out * 10;
+			return out;
+		}
+		else {
+			out = 0;
+			return out;
+		}
+	}
+	
+}
