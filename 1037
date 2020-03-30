@@ -1,0 +1,82 @@
+// 1037.cpp
+//Bro.2 buying the grass
+//a easy-solved problem
+ 
+#include <iostream>
+using namespace std;
+void quicksort(int[], int,int);
+int divide(int[], int, int);
+int main()
+{
+	int hn, ln, an=0, * h, * l,maxnum=0;
+	bool found = false;
+	cin >> hn >> ln;
+	h = new int[hn];
+	l = new int[ln];
+	
+	for (int i = 0; i < hn; i++)
+	{
+		cin >> h[i];
+		maxnum = maxnum > h[i]?maxnum:h[i];
+	}
+	maxnum++;
+	for (int i = 0; i < ln; i++)
+	{
+		cin >> l[i];
+	}
+	quicksort(l, 0,ln-1);
+	quicksort(h, 0,hn-1);
+	for (int i = hn-1; i >-1; i--)
+	{
+		found = false;
+		for (int j = ln - 1; j > -1; j--)
+		{
+			if (l[j] < h[i])
+			{
+				an++;
+				l[j] = maxnum;
+				found = true;
+				break;
+			}
+		}
+		if (!found) break;
+	}
+	an += hn;
+	cout << an;
+	delete[]h;
+	delete[]l;
+}
+ 
+ 
+//Function:quicksort
+//void quicksort(int a[],int low,int high)
+//quicksort(需要排序的数组，左下标，右下标)
+void quicksort(int a[], int low, int high)
+{
+	int mid;
+	if (low >= high) return;
+	else
+	{
+		mid = divide(a, low, high);
+		quicksort(a, low, mid - 1);
+		quicksort(a, mid + 1, high);
+	}
+	return;
+}
+ 
+//Function:divide
+//int divide(int a[],int low,int high)
+//divide(需要排序的数组，左下标，右下标）
+int divide(int a[], int low, int high)
+{
+	int key = a[low];
+	while (low != high)
+	{
+		while (low<high && a[high]>key) --high;
+		if (low < high) { a[low] = a[high]; ++low; }
+		while (low < high && a[low] < key)++low;
+		if (low < high) { a[high] = a[low]; --high; }
+	}
+	a[low] = key;
+	return low;
+}
