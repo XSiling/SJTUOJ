@@ -1,0 +1,63 @@
+// 1021从前有座山
+//输出一个回字形矩阵
+ 
+#include <iostream>
+#include <iomanip>
+using namespace std;
+ 
+void fillintheblank(int** arr, int n, int startnum, int placenum);
+void printtheblank(int** arr, int n);
+int main()
+{
+	int n;
+	cin >> n;
+	int** arr;
+	arr = new int*[n];
+	for (int i = 0; i < n; i++)
+	{
+		arr[i] = new int[n];
+	}
+	fillintheblank(arr, n, 1, 0);
+	printtheblank(arr, n);
+}
+ 
+void fillintheblank(int** arr, int n,int startnum,int placenum)
+{
+	int i = 0, row=placenum,col = placenum;
+	if (n == 1) { arr[placenum][placenum] = startnum; return; }
+	if (n == 0) { return; }
+	for (i; i < n; i++)
+	{
+		arr[row][col] = startnum + i;
+		col++;
+	}
+	col--;
+	for (i; i < 2 * n - 1; i++)
+	{
+		row++;
+		arr[row][col] = startnum + i;
+	}
+	for (i; i < 3 * n - 2; i++)
+	{
+		col--;
+		arr[row][col] = startnum + i;
+	}
+	for (i; i < 4 * n - 4; i++)
+	{
+		row--;
+		arr[row][col] = startnum + i;
+	}
+	fillintheblank(arr, n - 2, arr[placenum + 1][placenum] + 1, placenum + 1);
+}
+ 
+void printtheblank(int** arr, int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			cout << setw(6) << arr[i][j] << '\t';
+		}
+		cout << endl;
+	}
+}
