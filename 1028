@@ -1,0 +1,76 @@
+// 1028.cpp
+//语句匹配问题
+ 
+#include <iostream>
+#include <cstring>
+using namespace std;
+ 
+bool ifthenelse(int[], int, int);
+int main()
+{
+	int N, i = 0, j = 0;
+	char word[10];
+	int* s;
+	bool flag = true;
+	const char* wordlist[5] = { "begin","end","if","then","else" };
+	cin >> N;
+	s = new int[N];
+	//用不同的数字表示字符串数组
+	for (i; i < N; i++)
+	{
+		cin >> word;
+		for (j = 0; j < 5; j++)
+		{
+			if (!strcmp(word, wordlist[j])) { s[i] = j; break; }
+		}
+	}
+	for (i = N - 1; i >= 0; i--)
+	{
+		if (s[i] == 0)
+		{
+			if (i == N - 1)
+			{
+				flag = false; break;
+			}
+			flag = false;
+			for (j = i; j < N; j++)
+			{
+				if (s[j] == 1) { flag = true; flag = ifthenelse(s,i,j); s[i] = s[j] = -1; break; }
+			}
+			if (!flag) break;
+		}
+	}
+	if (!flag) { cout << "NO"; delete[]s; return 0; }
+	flag=ifthenelse(s, -1, N );
+	if (flag) cout << "YES";
+	else cout << "NO";
+	delete []s;
+}
+ 
+bool ifthenelse(int s[],int start,int ender)
+{
+	bool result = true;
+	int j;
+	for (int i = ender-1; i >start; i--)
+	{
+		if (s[i] == 2)
+		{
+			if (s[i + 1] != 3) { result = false; return result; }
+			else
+			{
+				s[i] = s[i + 1] = -1;
+				j = i+2;
+				while (j < ender)
+				{
+					if (s[j] == 4) { s[j] = -1; break; }
+					j++;
+				}
+			}
+		}
+	}
+	for (int i = start + 1; i < ender; i++)
+	{
+		if (s[i] != -1) result = false;
+	}
+	return result;
+}
