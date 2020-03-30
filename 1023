@@ -1,0 +1,73 @@
+// 1023.cpp 
+//matrix overturn
+ 
+#include <iostream>
+using namespace std;
+void hori(int[], int);
+void vert(int[], int);
+void diag(int[], int);
+int main()
+{
+	void(*p[3])(int*, int) = {hori,vert,diag};
+	int n, *op,*length,**matrix;
+	cin >> n;
+	op = new int[n];
+	length = new int[n];
+	matrix = new int* [n];
+	for (int i = 0; i < n; i++)
+	{
+		cin >> length[i] >> op[i];
+		matrix[i] = new int[length[i] * length[i]];
+		for (int j = 0; j < length[i] * length[i]; j++)
+		{
+			cin >> matrix[i][j];
+		}
+	}
+	for (int i = 0; i < n; i++)
+	{
+		p[op[i]](matrix[i],length[i]);
+	}
+	for (int i = 0; i < n; i++)
+	{
+		delete[]matrix[i];
+	}
+	delete[]op;
+	delete[]length;
+	delete[]matrix;
+}
+ 
+void vert(int a[], int n)//竖直翻转矩阵
+{
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			cout << a[(n - 1 - i) * n + j]<<" ";
+		}
+		cout << endl;
+	}
+}
+ 
+void hori(int a[], int n)//水平翻转矩阵
+{
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			cout << a[(i + 1) * n - 1 - j] << " ";
+		}
+		cout << endl;
+	}
+}
+ 
+void diag(int a[],int n)//按照对角线方向翻转矩阵
+{
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			cout << a[j * n + i] << " ";
+		}
+		cout << endl;
+	}
+}
