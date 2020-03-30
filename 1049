@@ -1,0 +1,151 @@
+// 1049.cpp :arranging the train
+//using stack
+ 
+#include <iostream>
+using namespace std;
+bool trainAble(int sitesize, int n, int turn[]);
+template<class elemtype>
+class Stack
+{
+public:
+    virtual bool isEmpty()const = 0;
+    virtual void push(const elemtype&) = 0;
+    virtual elemtype pop() = 0;
+    virtual elemtype top()const = 0;
+    virtual ~Stack() {}
+};
+ 
+class spaceError {};
+template<class elemtype>
+class seqStack :public Stack<elemtype>
+{
+private:
+    elemtype* elem;
+    int top_p;
+    int maxsize;
+    void doublespace();
+public:
+    seqStack(int initialsize = 1);
+    bool isEmpty()const;
+    bool isFull(int)const;
+    void push(const elemtype&);
+    elemtype pop();
+    elemtype top()const;
+    ~seqStack() { delete[]elem; }
+};
+template<class elemtype>
+bool seqStack<elemtype>::isFull(int k)const 
+{
+    return ((top_p + 1) == k);
+}
+template<class elemtype>
+seqStack<elemtype>::seqStack(int initialsize)
+{
+    if (initialsize < 0)
+    {
+        throw spaceError();
+    }
+    top_p = -1;
+    maxsize = initialsize;
+    elem = new elemtype[maxsize];
+ 
+}
+ 
+template<class elemtype>
+void seqStack<elemtype>::doublespace()
+{
+    elemtype* tmp = elem;
+    elem = new elemtype[2 * maxsize];
+    for (int i = 0; i < maxsize; i++)
+    {
+        elem[i] = tmp[i];
+    }
+    maxsize *= 2;
+    delete[]tmp;
+}
+ 
+template<class elemtype>
+bool seqStack<elemtype>::isEmpty()const
+{
+    return top_p < 0;
+}
+ 
+template<class elemtype>
+void seqStack<elemtype>::push(const elemtype& x)
+{
+    top_p++;
+    if (top_p == maxsize) { doublespace(); }
+    elem[top_p] = x;
+}
+ 
+template<class elemtype>
+elemtype seqStack<elemtype>::pop()
+{
+    return elem[top_p--];
+}
+ 
+template<class elemtype>
+elemtype seqStack<elemtype>::top()const
+{
+    return elem[top_p];
+}
+ 
+int main()
+{
+    int T,N,M;//N为火车数，M为调度数目
+    int* turnturn;
+    cin >> T;
+    for (int i = 0; i < T; i++)
+    {
+        cin >> N >> M;
+        turnturn = new int[N];
+        for (int j = 0; j < N; j++)
+        {
+            cin >> turnturn[j];
+        }
+        if (M == 0)
+        {
+            for (int j = 0; j < N; j++)
+            {
+                if (turnturn[j] != j) cout << "NO"<<endl; continue;
+            }
+            cout << "YES" << endl;
+        }
+        else
+        {
+            if (trainAble(M, N, turnturn)) cout << "YES" << endl;
+            else cout << "NO" << endl;
+        }
+ 
+ 
+        delete[]turnturn;
+ 
+    }
+}
+ 
+bool trainAble(int sitesize, int n, int turn[])//调度站最多容纳sitesize辆火车，一共有n辆火车0,1,2....n-1,需要按照turn的顺序离开
+{
+    seqStack<int> trainin(sitesize);//这是表示调度站的栈
+    seqStack<int> train;//这是表示火车的栈
+    for (int i = n - 1; i >= 0; i--)
+    {
+        train.push(i);
+    }
+    for (int i = 0; i < n; i++)
+    {
+        if (trainin.top() == turn[i]) { trainin.pop(); continue; }
+        else
+        {
+            while (train.top() != turn[i])
+            {
+                if (trainin.isFull(sitesize)) { return false; }
+                trainin.push(train.pop());
+            }
+            if (train.isEmpty()) { return false; }
+            else { train.pop(); }
+        }
+    }
+    return true;
+ 
+ 
+}
