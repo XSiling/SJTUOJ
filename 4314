@@ -1,0 +1,94 @@
+// 4314.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
+//逆序列
+ 
+#include <iostream>
+using namespace std;
+struct kk
+{
+    int locate;
+    int value;
+};
+ 
+//Function:divide
+//int divide(int a[],int low,int high)
+//divide(需要排序的数组，左下标，右下标）
+int divide(kk a[], int low, int high)
+{
+	kk key = a[low];
+	while (low != high)
+	{
+		while (low<high && a[high].value>key.value) --high;
+		if (low < high) { a[low] = a[high]; ++low; }
+		while (low < high && a[low].value < key.value)++low;
+		if (low < high) { a[high] = a[low]; --high; }
+	}
+	a[low] = key;
+	return low;
+}
+ 
+//Function:quicksort
+//void quicksort(int a[],int low,int high)
+//quicksort(需要排序的数组，左下标，右下标)
+void quicksort(kk a[], int low, int high)
+{
+	int mid;
+	if (low >= high) return;
+	else
+	{
+		mid = divide(a, low, high);
+		quicksort(a, low, mid - 1);
+		quicksort(a, mid + 1, high);
+	}
+	return;
+}
+ 
+void swap(int a[], int l, int t)//l位置向左交换t次
+{
+	int tmp;
+	for (int i = 0; i < t; ++i)
+	{
+		tmp = a[l - 1];
+		a[l - 1] = a[l];
+		a[l] = tmp;
+		l--;
+	}
+}
+ 
+int main()
+{
+    int n;
+    long sum=0;
+    int* num;
+	int tmp;
+    int* reverse;
+    kk* numv;
+	cin >> n;
+    num = new int[n];
+    numv = new kk[n];
+	reverse = new int[n] {0};
+    for (int i = 0; i < n; ++i)
+    {
+        cin >> num[i];
+        numv[i].locate = i;
+        numv[i].value = num[i];
+    }
+    //快速排序解决numv的排序（value），由此判定locate,得到一个kk序列
+	quicksort(numv, 0, n - 1);
+	//numv为kk序列
+	//求逆序列
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = 0; j < numv[i].locate; ++j)
+		{
+			if (num[j] > num[numv[i].locate]) reverse[i]++;
+		}
+	}
+	for(int i=0;i<n;++i)
+    {
+        sum+=reverse[i];
+    }
+    cout<<sum;
+delete[]numv;
+delete[]num;
+delete[]reverse;
+}
