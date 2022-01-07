@@ -1,0 +1,38 @@
+//4313.cpp:
+//value-maximizing strategy
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+void swap(string& a1, string& a2)
+{
+    string c(a1);
+    a1 = a2;
+    a2 = c;
+}
+int main()
+{
+    vector<string> myvector;
+    string num;
+    int n;
+    cin >> n;
+    for(int i=0;i<n;++i)
+    {
+        cin >> num;
+        myvector.push_back(num);
+    }
+    for (int i = 0; i < n - 1; i++)
+    {
+        for (int j = 0; j <n - i - 1; j++)
+        {
+            if ((myvector[j] + myvector[j + 1]) < (myvector[j + 1] + myvector[j])) 
+            {
+                swap(myvector[j], myvector[j + 1]);
+            }
+        }
+    }
+    for (int i = 0; i < n; i++) {
+        cout << myvector[i];
+    }
+    return 0;
+}
