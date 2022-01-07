@@ -1,0 +1,30 @@
+// 2105.cpp : 寻找最长连续子矩形
+//way1//全部列举法--Long Time Error
+//way2//递增法
+#include <iostream>
+#include <stack>
+using namespace std;
+ 
+long long n, rect[1000005];
+stack<int> s;
+long long area(0);
+int main()
+{
+    cin >> n;
+    for (int i = 0; i < n; ++i)
+        cin >> rect[i];
+    rect[n] = 0;//在最后添加一个0，为了后期闭合这个栈。
+    for (int i = 0; i <= n; ++i)
+    {
+        if (s.empty() || rect[s.top()] < rect[i])s.push(i);
+        else
+        {//计算最大值
+            int tmp = s.top();
+            s.pop();//弹出
+             long long temp = rect[tmp] * (s.empty() ? i : i - s.top() - 1);
+            if (area < temp)area = temp;
+            --i;
+        }
+    }
+    cout << area;
+}
