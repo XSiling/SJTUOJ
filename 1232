@@ -1,0 +1,189 @@
+//1232.cpp :maze
+//pull down the walls!
+ 
+#include<iostream>
+#include<vector>
+using namespace std;
+class DisjointSet
+{
+ 
+private:
+    int size;
+    int *parent;
+public:
+    DisjointSet(int s)
+    {
+        size = s;
+        parent = new int [s];
+        for (int i = 0; i < s; ++i)
+            parent[i] = -1;
+    }
+    ~DisjointSet()
+    {
+        delete []parent;
+    }
+    void Union(int root1,int root2);
+    int Find(int x);
+};
+ 
+int DisjointSet::Find(int x)
+{
+    int k,j,r;
+    r = x;
+    while (parent[r] >= 0)
+        r = parent[r];
+    k = x;
+    while (k != r)
+    {
+        j = parent[k];
+        parent[k] = r;
+        k = j;
+    }
+    return r;
+}
+ 
+void DisjointSet::Union(int root1, int root2)
+{
+    if (root1 == root2)
+        return ;
+    if (parent[root1] > parent[root2])
+    {
+        parent[root2] += parent[root1];
+        parent[root1] = root2;
+    }
+    else
+    {
+        parent[root1] += parent[root2];
+        parent[root2] = root1;
+    }
+}
+ 
+int searchfortheline(int n)
+{
+    int result = 0;
+    while (1)
+    {
+        if (n <= result*(result+1)/2)
+            return result;
+        else
+            result++;
+    }
+}
+ 
+vector<int> result;
+bool maze(vector<vector<int> >s,int start,int end,int N)
+{
+    vector<int> tmp;
+    int a = searchfortheline(start);
+    if (searchfortheline(start - a) == a-1 && a-1>0)
+        tmp.push_back(start-a);
+    else
+        tmp.push_back(-1);
+    if (searchfortheline(start - a + 1) == a-1 && a-1>0)
+        tmp.push_back(start-a+1);
+    else
+        tmp.push_back(-1);
+    if (searchfortheline(start + a) == a+1 && a+1<=N)
+        tmp.push_back(start+a);
+    else
+        tmp.push_back(-1);
+    if (searchfortheline(start + a + 1) == a+1 && a+1<=N)
+        tmp.push_back(start+a+1);
+    else
+        tmp.push_back(-1);
+    if (tmp[0] == end || tmp[1] == end || tmp[2] == end || tmp[3] == end)
+        return false;
+    for (int i = 0; i < 4; i++)
+    {
+        if (tmp[i] != -1 && (s[start-1][tmp[i]-1] == -1 || s[start-1][tmp[i]-1] == -2))
+            continue;
+        if (tmp[i] != -1 && s[start-1][tmp[i]-1] == 1)
+        {
+            s[start-1][tmp[i]-1] = -2;
+            s[tmp[i]-1][start-1] = -2;
+            if (!maze(s,tmp[i],end,N))
+            {
+                result.push_back(tmp[i]);
+                return false;
+            }
+            else
+                continue;
+        }
+    }
+    return true;
+}
+ 
+int main()
+{
+    int N,A,B,t1,t2;
+    cin >> N >> A >> B;
+    DisjointSet test(N*(N+1)/2);
+    vector<vector<int> > s;
+    vector<int> tmp;
+    result.push_back(A);
+    for (int i = 0; i < N*(N+1)/2; i++)
+    {
+        for (int j = 0; j < N*(N+1)/2; j++)
+        {
+            tmp.push_back(-1);
+        }
+        s.push_back(tmp);
+        tmp.clear();
+    }
+    while (1)
+    {
+        cin >> t1 >> t2;
+        int tmp = searchfortheline(t1);
+        switch(t2)
+        {
+        case 0:
+        {
+            if (searchfortheline(t1-tmp) == tmp - 1 && tmp-1 > 0)
+            {
+                test.Union(test.Find(t1),test.Find(t1-tmp));
+                s[t1-1][t1-tmp-1] = 1;
+                s[t1-tmp-1][t1-1] = 1;
+            }
+            break;
+        }
+        case 1:
+        {
+            if (searchfortheline(t1-tmp+1) == tmp - 1 && tmp-1 > 0)
+            {
+                test.Union(test.Find(t1),test.Find(t1-tmp+1));
+                s[t1-1][t1-tmp] = 1;
+                s[t1-tmp][t1-1] = 1;
+            }
+            break;
+        }
+        case 2:
+        {
+            if (searchfortheline(t1+tmp) == tmp + 1 && tmp+1 <= N)
+            {
+                test.Union(test.Find(t1),test.Find(t1+tmp));
+                s[t1-1][t1+tmp-1] = 1;
+                s[t1+tmp-1][t1-1] = 1;
+            }
+            break;
+        }
+        case 3:
+        {
+            if (searchfortheline(t1+tmp+1) == tmp + 1 && tmp+1 <= N)
+            {
+                test.Union(test.Find(t1),test.Find(t1+tmp+1));
+                s[t1-1][t1+tmp] = 1;
+                s[t1+tmp][t1-1] = 1;
+            }
+            break;
+        }
+        }
+        if (test.Find(A) == test.Find(B))
+        {
+            maze(s,B,A,N);
+            break;
+        }
+    }
+    result.push_back(B);
+    for (int i = 0; i < result.size(); i++)
+        cout << result[i] << ' ';
+}
